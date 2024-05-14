@@ -1,0 +1,398 @@
+{
+  "v": 1,
+  "id": "06540777-0970-4ce2-9314-5740e84b1ff6",
+  "rev": 1,
+  "name": "LnxCmd",
+  "summary": "enhance Graylog's syslog log analysis for Issued commands",
+  "description": "This content pack is designed to enhance Graylog's syslog log analysis capabilities by parsing logs with a custom Grok pattern and visualizing issued commands per user on all hosts as a pie chart. It's tailored for environments where understanding user activity and command usage is crucial for system administration and security monitoring.\n",
+  "vendor": "Mohammadreza Booshehri ",
+  "url": "https://github.com/mrbooshehri/graylog-lnxcmd-dashboard",
+  "parameters": [],
+  "entities": [
+    {
+      "v": "1",
+      "type": {
+        "name": "grok_pattern",
+        "version": "1"
+      },
+      "id": "0e0e3077-60de-400e-bcb7-ccd43411a373",
+      "data": {
+        "name": "LnxCmd",
+        "pattern": "User: \\[ %{USERNAME:username} \\] Shell PID: \\[%{BASE10NUM:pid}\\] command: %{GREEDYDATA:command}\n"
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.7+5e29a2c"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "dashboard",
+        "version": "2"
+      },
+      "id": "340a75ff-f6f7-45d5-acf5-18b689755244",
+      "data": {
+        "summary": {
+          "@type": "string",
+          "@value": "logs of issued commands"
+        },
+        "search": {
+          "queries": [
+            {
+              "id": "cfa56766-7ca4-4f84-8300-10260cccfd80",
+              "timerange": {
+                "from": 300,
+                "type": "relative"
+              },
+              "filters": [],
+              "query": {
+                "type": "elasticsearch",
+                "query_string": ""
+              },
+              "search_types": [
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": ""
+                  },
+                  "name": "chart",
+                  "timerange": {
+                    "from": 604800,
+                    "type": "relative"
+                  },
+                  "column_limit": null,
+                  "streams": [
+                    "588eb7b1-1ea7-475d-b35d-c79be68c56c6"
+                  ],
+                  "row_limit": null,
+                  "series": [
+                    {
+                      "type": "count",
+                      "id": "Message Count",
+                      "field": "username"
+                    }
+                  ],
+                  "filter": null,
+                  "rollup": true,
+                  "row_groups": [
+                    {
+                      "type": "values",
+                      "fields": [
+                        "username"
+                      ],
+                      "limit": 15,
+                      "skip_empty_values": true
+                    }
+                  ],
+                  "type": "pivot",
+                  "id": "f3d2275f-6781-45b9-b184-d9bc4ad4373f",
+                  "filters": [],
+                  "column_groups": [],
+                  "sort": []
+                },
+                {
+                  "query": {
+                    "type": "elasticsearch",
+                    "query_string": ""
+                  },
+                  "name": null,
+                  "timerange": {
+                    "from": 604800,
+                    "type": "relative"
+                  },
+                  "offset": 0,
+                  "streams": [
+                    "588eb7b1-1ea7-475d-b35d-c79be68c56c6"
+                  ],
+                  "filter": null,
+                  "decorators": [],
+                  "type": "messages",
+                  "id": "6d04414d-4c98-4d72-9920-2bd21b32d871",
+                  "limit": 150,
+                  "filters": []
+                }
+              ]
+            }
+          ],
+          "parameters": [],
+          "requires": {},
+          "owner": "admin",
+          "created_at": "2024-05-14T05:29:02.448Z"
+        },
+        "created_at": "2024-05-14T04:37:04.738Z",
+        "requires": {},
+        "state": {
+          "cfa56766-7ca4-4f84-8300-10260cccfd80": {
+            "selected_fields": null,
+            "static_message_list_id": null,
+            "titles": {
+              "widget": {
+                "5ef5a317-cd4e-45e1-9c40-8dabd488a9e9": "Message Table",
+                "62d71493-11bd-41f1-9239-b61082b426ce": "Users Stat"
+              },
+              "tab": {
+                "title": "Logs"
+              }
+            },
+            "widgets": [
+              {
+                "id": "5ef5a317-cd4e-45e1-9c40-8dabd488a9e9",
+                "type": "messages",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 604800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": ""
+                },
+                "streams": [
+                  "588eb7b1-1ea7-475d-b35d-c79be68c56c6"
+                ],
+                "config": {
+                  "fields": [
+                    "timestamp",
+                    "source",
+                    "gl2_remote_ip",
+                    "username",
+                    "command",
+                    "pid"
+                  ],
+                  "show_message_row": false,
+                  "show_summary": false,
+                  "decorators": [],
+                  "sort": [
+                    {
+                      "type": "pivot",
+                      "field": "timestamp",
+                      "direction": "Descending"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "62d71493-11bd-41f1-9239-b61082b426ce",
+                "type": "aggregation",
+                "filter": null,
+                "filters": [],
+                "timerange": {
+                  "from": 604800,
+                  "type": "relative"
+                },
+                "query": {
+                  "type": "elasticsearch",
+                  "query_string": ""
+                },
+                "streams": [
+                  "588eb7b1-1ea7-475d-b35d-c79be68c56c6"
+                ],
+                "config": {
+                  "visualization": "pie",
+                  "column_limit": null,
+                  "event_annotation": false,
+                  "row_limit": 15,
+                  "row_pivots": [
+                    {
+                      "fields": [
+                        "username"
+                      ],
+                      "type": "values",
+                      "config": {
+                        "limit": 15,
+                        "skip_empty_values": true
+                      }
+                    }
+                  ],
+                  "series": [
+                    {
+                      "config": {
+                        "name": "Message Count"
+                      },
+                      "function": "count(username)"
+                    }
+                  ],
+                  "rollup": false,
+                  "column_pivots": [],
+                  "visualization_config": null,
+                  "formatting_settings": null,
+                  "sort": []
+                }
+              }
+            ],
+            "widget_mapping": {
+              "5ef5a317-cd4e-45e1-9c40-8dabd488a9e9": [
+                "6d04414d-4c98-4d72-9920-2bd21b32d871"
+              ],
+              "62d71493-11bd-41f1-9239-b61082b426ce": [
+                "f3d2275f-6781-45b9-b184-d9bc4ad4373f"
+              ]
+            },
+            "positions": {
+              "5ef5a317-cd4e-45e1-9c40-8dabd488a9e9": {
+                "col": 5,
+                "row": 1,
+                "height": 7,
+                "width": 8
+              },
+              "62d71493-11bd-41f1-9239-b61082b426ce": {
+                "col": 1,
+                "row": 1,
+                "height": 7,
+                "width": 4
+              }
+            },
+            "formatting": {
+              "highlighting": []
+            },
+            "display_mode_settings": {
+              "positions": {}
+            }
+          }
+        },
+        "properties": [],
+        "owner": "admin",
+        "title": {
+          "@type": "string",
+          "@value": "LnxCmd"
+        },
+        "type": "DASHBOARD",
+        "description": {
+          "@type": "string",
+          "@value": ""
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.7+5e29a2c"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "588eb7b1-1ea7-475d-b35d-c79be68c56c6",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": true
+        },
+        "title": {
+          "@type": "string",
+          "@value": "LnxCmd"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "application_name"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "LnxCmd"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": ""
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Issued command on system"
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.7+5e29a2c"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "grok_pattern",
+        "version": "1"
+      },
+      "id": "2c273537-aaf1-479c-801f-c9d140712cdd",
+      "data": {
+        "name": "GREEDYDATA",
+        "pattern": ".*"
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.7+5e29a2c"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "grok_pattern",
+        "version": "1"
+      },
+      "id": "07e04a17-1942-4d74-b871-2c85bdd4815b",
+      "data": {
+        "name": "BASE10NUM",
+        "pattern": "(?<![0-9.+-])(?>[+-]?(?:(?:[0-9]+(?:\\.[0-9]+)?)|(?:\\.[0-9]+)))"
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.7+5e29a2c"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "grok_pattern",
+        "version": "1"
+      },
+      "id": "40fcdaa5-ac02-4cea-8676-0d2a2988aeb9",
+      "data": {
+        "name": "USERNAME",
+        "pattern": "[a-zA-Z0-9._-]+"
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.7+5e29a2c"
+        }
+      ]
+    }
+  ]
+}
